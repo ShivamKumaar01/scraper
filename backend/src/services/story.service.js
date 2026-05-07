@@ -17,3 +17,31 @@ export const getStoriesService = async (page, limit) => {
     currentPage: page,
   };
 };
+
+export const toggleBookmarkService = async (storyId, userId) => {
+  const story = await Story.findById(storyId);
+
+  if (!story) {
+    throw new Error("Story not found");
+  }
+
+  const alreadyBookmarked = story.bookmarks.includes(userId);
+
+  if (alreadyBookmarked) {
+    story.bookmarks = story.bookmarks.filter((id) => id.toString() !== userId);
+
+    await story.save();
+
+    return {
+      message: "Bookmark Removed",
+    };
+  } else {
+    story.bookmarks.push(userId);
+
+    await story.save();
+
+    return {
+      message: "Bookmark Added",
+    };
+  }
+};
