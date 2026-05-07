@@ -1,4 +1,4 @@
-import { registerService } from "../services/auth.service.js";
+import { registerService,loginService } from "../services/auth.service.js";
 
 import generateToken from "../utils/generate-token.js";
 

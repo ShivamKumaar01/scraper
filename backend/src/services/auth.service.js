@@ -19,3 +19,23 @@ export const registerService = async (name, email, password) => {
 
    return user;
 };
+
+export const loginService = async (email, password) => {
+
+  const user = await User.findOne({ email });
+
+  if (!user) {
+    throw new Error("Invalid Email or Password");
+  }
+
+  const isPasswordMatched = await bcrypt.compare(
+    password,
+    user.password
+  );
+
+  if (!isPasswordMatched) {
+    throw new Error("Invalid Email or Password");
+  }
+
+  return user;
+};
