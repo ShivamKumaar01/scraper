@@ -38,7 +38,11 @@ const Stories = () => {
           </Box>
         ) : (
           <>
-            <StoryList stories={stories} />
+            <StoryList
+              stories={stories}
+              fetchStories={fetchStories}
+              page={page}
+            />
 
             <Box display="flex" justifyContent="center" marginTop={4}>
               <Pagination
