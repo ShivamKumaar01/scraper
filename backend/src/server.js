@@ -8,7 +8,10 @@ dotenv.config();
 const PORT = process.env.PORT || 5000;
 
 connectDB();
-scrapeStories();
+
+scrapeStories().catch((error) => {
+  console.error("Story scraping failed:", error.message || error);
+});
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);

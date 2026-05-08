@@ -3,7 +3,7 @@ import Login from "../pages/Login/Login";
 import Register from "../pages/Register/Register";
 import Bookmarks from "../pages/Bookmarks/Bookmarks";
 import ProtectedRoute from "../components/common/ProtectedRoute";
-import Story from "../pages/Story/Story";
+import Stories from "../pages/Story/Story";
 
 const AppRoutes = () => {
   return (
@@ -12,7 +12,7 @@ const AppRoutes = () => {
 
       <Route path="/register" element={<Register />} />
       <Route path="/login" element={<Login />} />
-      <Route path="/story" element={<Story/>}/>
+      <Route path="/story" element={<Stories />} />
 
       <Route
         path="/bookmarks"
