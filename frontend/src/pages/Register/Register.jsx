@@ -3,7 +3,14 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import * as Yup from "yup";
 
-import { TextField, Button, Typography, Box } from "@mui/material";
+import {
+  TextField,
+  Button,
+  Typography,
+  Box,
+  Snackbar,
+  Alert,
+} from "@mui/material";
 
 import { useAuth } from "../../context/auth-context";
 
@@ -19,6 +26,9 @@ const Register = () => {
   });
 
   const [errors, setErrors] = useState({});
+  const [open, setOpen] = useState(false);
+  const [toastMessage, setToastMessage] = useState("");
+  const [toastSeverity, setToastSeverity] = useState("success");
 
   const validationSchema = Yup.object({
     name: Yup.string()
@@ -56,8 +66,14 @@ const Register = () => {
       setErrors({});
 
       await register(formData);
+      setToastMessage("Account created successfully");
+      setToastSeverity("success");
+      setOpen(true);
 
-      navigate("/login");
+      setTimeout(() => {
+        navigate("/login");
+      }, 2000);
+
     } catch (error) {
       if (error.inner) {
         const newErrors = {};
@@ -68,7 +84,14 @@ const Register = () => {
 
         setErrors(newErrors);
       } else {
-        alert(error.response?.data?.message || error.message);
+
+        setToastMessage(
+          error.response?.data?.message || "Something went wrong"
+        );
+
+        setToastSeverity("error");
+
+        setOpen(true);
       }
     }
   };
@@ -121,6 +144,24 @@ const Register = () => {
           <Link to="/login"> Login</Link>
         </Typography>
       </Box>
+
+      <Snackbar
+        open={open}
+        autoHideDuration={3000}
+        onClose={() => setOpen(false)}
+        anchorOrigin={{
+          vertical: "top",
+          horizontal: "right",
+        }}
+      >
+        <Alert
+          onClose={() => setOpen(false)}
+          severity={toastSeverity}
+          variant="filled"
+        >
+          {toastMessage}
+        </Alert>
+      </Snackbar>
     </div>
   );
 };

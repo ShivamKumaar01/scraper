@@ -2,7 +2,16 @@ import "./Login.css";
 import { useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import * as Yup from "yup";
-import { TextField, Button, Typography, Box } from "@mui/material";
+
+import {
+  TextField,
+  Button,
+  Typography,
+  Box,
+  Snackbar,
+  Alert,
+} from "@mui/material";
+
 import { useAuth } from "../../context/auth-context";
 
 const Login = () => {
@@ -16,6 +25,12 @@ const Login = () => {
   });
 
   const [errors, setErrors] = useState({});
+
+  const [open, setOpen] = useState(false);
+
+  const [toastMessage, setToastMessage] = useState("");
+
+  const [toastSeverity, setToastSeverity] = useState("success");
 
   const validationSchema = Yup.object({
     email: Yup.string().email("Invalid email").required("Email is required"),
@@ -49,7 +64,16 @@ const Login = () => {
 
       await login(formData);
 
-      navigate("/");
+      setToastMessage("Login successful");
+
+      setToastSeverity("success");
+
+      setOpen(true);
+
+      setTimeout(() => {
+        navigate("/story");
+      }, 2000);
+
     } catch (error) {
       if (error.inner) {
         const newErrors = {};
@@ -60,7 +84,14 @@ const Login = () => {
 
         setErrors(newErrors);
       } else {
-        alert(error.response?.data?.message || error.message);
+
+        setToastMessage(
+          error.response?.data?.message || "Something went wrong"
+        );
+
+        setToastSeverity("error");
+
+        setOpen(true);
       }
     }
   };
@@ -103,6 +134,24 @@ const Login = () => {
           <Link to="/register"> Register</Link>
         </Typography>
       </Box>
+
+      <Snackbar
+        open={open}
+        autoHideDuration={3000}
+        onClose={() => setOpen(false)}
+        anchorOrigin={{
+          vertical: "top",
+          horizontal: "right",
+        }}
+      >
+        <Alert
+          onClose={() => setOpen(false)}
+          severity={toastSeverity}
+          variant="filled"
+        >
+          {toastMessage}
+        </Alert>
+      </Snackbar>
     </div>
   );
 };
